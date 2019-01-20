@@ -1,8 +1,9 @@
 /**
  * A simple component to use
- * Use "providesModule" so you can reference it from another file with
- * import MediaAppTemplateInfoButton from "MediaAppTemplateInfoButton.react"
- * @providesModule MediaAppTemplateInfoButton.react
+ * Do the "providesModule" provides module name to haste map
+ * So you can reference it from other file by
+ * import BasicAppTemplateInfoButton from "BasicAppTemplateInfoButton.react"
+ * @providesModule BasicAppTemplateInfoButton.react
  */
 'use strict';
 
@@ -23,7 +24,7 @@ const {AudioModule} = NativeModules;
 const CLICK_SOUND = asset('menu-click.wav');
 const FOCUS_SCALE = 1.3;
 
-class MediaAppTemplateInfoButton extends React.Component {
+class BasicAppTemplateInfoButton extends React.Component {
   static defaultProps = {
     width: 180,
     text: '',
@@ -60,10 +61,6 @@ class MediaAppTemplateInfoButton extends React.Component {
   _click = () => {
     // input handling
     this.props.onClick && this.props.onClick();
-    // playing one shot audio
-    AudioModule.playOneShot({
-      source: CLICK_SOUND,
-    });
   };
 
   render() {
@@ -78,21 +75,25 @@ class MediaAppTemplateInfoButton extends React.Component {
           onClick={this._click} //this event trigger when click the view
           onExit={this._blur} //this event trigger when cursor move out of the view
           onEnter={this._focus} //this event trigger when cursor move into of the view
+          onClickSound={CLICK_SOUND}
+          onEnterSound={CLICK_SOUND}
+          onExitSound={CLICK_SOUND}
+          onLongClickSound={CLICK_SOUND}
           >
           <Animated.View
             style={[
               styles.button,
               this.state.hasFocus && styles.buttonFocused,
               {
-                // With this the width of this view
+                // With this the width of the this view
                 // is animated with the value of scaleAnim
-                // by interpolation
+                // by an interpolation
                 width: this.state.scaleAnim.interpolate({
                   inputRange: [0, 1],
                   outputRange: [this.props.width, this.props.width * FOCUS_SCALE],
                 }),
               }]}>
-              <Image 
+              <Image
                 style={styles.icon}
                 source={this.props.source} />
               <Text style={styles.text}>
@@ -141,4 +142,4 @@ const styles = StyleSheet.create({
   },
 });
 
-module.exports = MediaAppTemplateInfoButton;
+module.exports = BasicAppTemplateInfoButton;
